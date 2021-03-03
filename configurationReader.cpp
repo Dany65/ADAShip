@@ -1,11 +1,9 @@
-#include "configurationReader.h"
-
 #include <iostream>
 #include <map>
 #include <fstream>
 #include <vector>
 
-
+#include "configurationReader.h"
 
 using namespace std;
 
