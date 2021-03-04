@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/ADAShip.dir/src/main.cpp.o CMakeFiles/ADAShip.dir/src/Ship.cpp.o CMakeFiles/ADAShip.dir/src/gameController.cpp.o CMakeFiles/ADAShip.dir/src/configurationReader.cpp.o  -o ADAShip 
