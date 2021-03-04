@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="ADAShip"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/boris/CLionProjects/ADAShip/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/boris/CLionProjects/ADAShip/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/boris/CLionProjects/ADAShip/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ADAShip">
+				<Option output="/home/boris/CLionProjects/ADAShip/cmake-build-debug/ADAShip" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/boris/CLionProjects/ADAShip/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/boris/CLionProjects/ADAShip/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 ADAShip"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ADAShip/fast">
+				<Option output="/home/boris/CLionProjects/ADAShip/cmake-build-debug/ADAShip" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/boris/CLionProjects/ADAShip/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/boris/CLionProjects/ADAShip/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 ADAShip/fast"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/boris/CLionProjects/ADAShip/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/src/Ship.cpp">
+			<Option target="ADAShip"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/src/Ship.h">
+			<Option target="ADAShip"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/src/configurationReader.cpp">
+			<Option target="ADAShip"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/src/configurationReader.h">
+			<Option target="ADAShip"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/src/gameController.cpp">
+			<Option target="ADAShip"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/src/gameController.h">
+			<Option target="ADAShip"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/src/main.cpp">
+			<Option target="ADAShip"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/boris/CLionProjects/ADAShip/adaship_config.ini">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

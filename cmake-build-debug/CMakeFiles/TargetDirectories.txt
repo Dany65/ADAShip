@@ -1,0 +1,3 @@
+/home/boris/CLionProjects/ADAShip/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/boris/CLionProjects/ADAShip/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/boris/CLionProjects/ADAShip/cmake-build-debug/CMakeFiles/ADAShip.dir
