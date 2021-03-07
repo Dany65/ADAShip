@@ -1,5 +1,5 @@
-#ifndef SHIP_H
-#define SHIP_H
+#ifndef ADASHIP_SHIP_H
+#define ADASHIP_SHIP_H
 
 #include <iostream>
 using namespace std;
@@ -8,11 +8,15 @@ class Ship {
   private:
     string name_;
     int length_;
-    int health;
+    int health_; //isThisNeeded
 
   public:
     void setHealth(int newHealth);
-    int getHealth();
+    const int getHealth() const;
+
+    const string &getName() const;
+
+    const int getLength() const;
 
     Ship (string name, int length);
 

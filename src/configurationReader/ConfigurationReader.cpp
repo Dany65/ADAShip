@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 
-#include "configurationReader.h"
+#include "ConfigurationReader.h"
 
 using namespace std;
 
@@ -83,7 +83,7 @@ pair<string, vector<string>> parseBoat(string line) {
     return pairToReturn;
 }
 
-map<string, vector<string>> getConfiguration (){
+map<string, vector<string>> ConfigurationReader::getConfiguration (){
 map<string, vector<string>> mapToReturn;
 string line;
 ifstream fileobject;
@@ -100,9 +100,7 @@ while(!fileobject.eof()){
 }
 for (const std::pair<string, vector<string>>& pair : mapToReturn) {
     cout << pair.first << endl;
-}
+} // BETTER EXAMPLE FOUND
 fileobject.close(); //closing ini file
 return mapToReturn;
 }
-
-//TODO: Make it so the Same name can't be used twice

@@ -5,7 +5,8 @@
 #include <fstream>
 #include <vector>
 using namespace std;
-
-map<string, vector<string>> getConfiguration();
-
+class ConfigurationReader{
+public:
+    static map<string, vector<string>> getConfiguration();
+};
 #endif
