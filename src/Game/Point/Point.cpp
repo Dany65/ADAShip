@@ -4,7 +4,7 @@
 //
 //#include "Point.h"
 
-#include <Game/Ship/Ship.h>
+#include "Game/Ship/Ship.h"
 #include "Point.h"
 
 
