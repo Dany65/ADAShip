@@ -1,2 +1,2 @@
 language = "cpp"
-run = "clang++ -Wall -std=c++17 src/*.cpp -o main && ./main"
+run = "clang++ -Wall -std=c++17 -I src src/*.cpp src/Game/*.cpp src/configurationReader/*.cpp src/Game/Board/*.cpp src/Game/Point/*.cpp src/Game/Ship/*.cpp src/gameController/*.cpp  -o main && ./main"

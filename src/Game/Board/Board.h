@@ -8,7 +8,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include "Game/Point/Point.h"
+#include "../Ship/Ship.h"
+#include "../Point/Point.h"
 
 using namespace std;
 
