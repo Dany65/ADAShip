@@ -27,13 +27,10 @@ private:
 
 public:
     Board(int length, int height, map<string, Ship> ships);
-    vector<vector<char>> createShipsDisplay(int length, int height);
-    vector<vector<char>> createShotsDisplay(int length, int height);
 
 //    vector<Point> populatePoints(int length, int height, map<string, Ship> ships);
 
     pair<pair<string, int>, char> splitInstructions(string instructions);
-    void display(vector<vector<char>>);
 private:
 //    bool canBePlaced()
     bool isCorrectlyFormatted(string instructions); // move to private

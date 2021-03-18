@@ -5,6 +5,49 @@
 #include <regex>
 #include "Board.h"
 
+void display(vector<vector<char>> toDisplay) {
+    for(int i = 0; i < toDisplay.size(); i++)
+    {
+        for(int j = 0; j < toDisplay[0].size(); j++)
+        {
+            cout << toDisplay[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+vector<vector<char>> createShotsDisplay(int length, int height) {  //TODO: finish Coordinates part
+    vector<vector<char>> vec( height , vector<char> (length));
+
+    for(int i = 0; i < height; i++)
+    {
+        for(int j = 0; j < length; j++)
+        {
+            vec[i][j] = '0';
+        }
+    }
+
+    cout << "Shots Display:" << endl;
+    display(vec);
+    return vec;
+}
+
+vector<vector<char>> createShipsDisplay(int length, int height) {
+    vector<vector<char>> vec( height , vector<char> (length));
+
+    for(int i = 0; i < height; i++)
+    {
+        for(int j = 0; j < length; j++)
+        {
+            vec[i][j] = '0';
+        }
+    }
+
+    cout << "Ships Display:" << endl;
+    display(vec);
+    return vec;
+}
+
 Board::Board(int length, int height, map<string, Ship> ships):
 length_(length),
 height_(height),
@@ -14,37 +57,6 @@ shotsDisplay(createShotsDisplay(length, height))
 //populatedPoints(populatePoints(length, height, ships)){
 {}
 
-vector<vector<char>> Board::createShotsDisplay(int length, int height) {  //TODO: finish Coordinates part
-    vector<vector<char>> vec( height , vector<char> (length));
-
-    for(int i = 0; i < height; i++)
-    {
-        for(int j = 0; j < length; j++)
-        {
-            vec[i][j] = j + i + 1;
-        }
-    }
-
-    cout << "Shots Display:" << endl;
-    display(vec);
-    return vec;
-}
-
-vector<vector<char>> Board::createShipsDisplay(int length, int height) {
-    vector<vector<char>> vec( height , vector<char> (length));
-
-    for(int i = 0; i < height; i++)
-    {
-        for(int j = 0; j < length; j++)
-        {
-            vec[i][j] = j + i + 1;
-        }
-    }
-
-    cout << "Ships Display:" << endl;
-    display(vec);
-    return vec;
-}
 
 //vector<Point> Board::populatePoints(int length, int height, map<string, Ship> ships) {
 //    cout << "Time to place your ships.";
@@ -90,17 +102,6 @@ pair<pair<string, int>, char> Board::getPlacementInstructions() {
     pair<pair<string, int>, char> formattedInstructions = splitInstructions(placementInstructions);
 }
 
-
-void Board::display(vector<vector<char>> toDisplay) {
-    for(int i = 0; i < toDisplay.size(); i++)
-    {
-        for(int j = 0; j < toDisplay[0].size(); j++)
-        {
-            cout << toDisplay[i][j] << " ";
-        }
-        cout << endl;
-    }
-}
 
 bool Board::isCorrectlyFormatted(string instructions) {
     // format AB, 25
