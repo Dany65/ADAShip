@@ -1,9 +1,9 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <Game/Ship/Ship.h>
-#include <Game/Point/Point.h>
-#include <Game/Board/Board.h>
+#include "Game/Ship/Ship.h"
+#include "Game/Point/Point.h"
+#include "Game/Board/Board.h"
 
 #include "configurationReader/ConfigurationReader.h"
 #include "Menu.h"
