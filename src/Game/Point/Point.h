@@ -13,12 +13,16 @@ using namespace std;
 
 class Point {
 private:
-    pair<string, int> coordinates_; // might not be needed
+    pair<int, int> coordinates_; // might not be needed
     Ship* ship_; // might not be needed
     bool populated_; // set to true when ship is placed
 public:
-    Point(pair<string, int> coordinates, Ship* ship);
+    Point(pair<int, int> coordinates, Ship* ship);
     bool isPopulated();
+
+    const pair<int, int> &getCoordinates() const;
+
+    Ship *getShip() const;
 };
 
 

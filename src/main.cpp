@@ -18,12 +18,19 @@ int main() {
 //    pair<string, int> coordinates = {"A", 2};
 
     Ship ship("Titanik", 2);
-    Point point({"A", 2},&ship);
-    map<string, Ship> ships;
-    ships.insert({ship.getName(), ship});
-    Board board(4, 2, ships);
+    Ship ship2("Sail", 1);
 
-    cout << endl <<board.splitInstructions("ABB012323, H").second << endl;
+//    Point point({1, 2},&ship);
+    map<string, Ship> ships;
+
+    ships.insert({ship.getName(), ship});
+    ships.insert({ship2.getName(), ship2});
+
+
+    Board board(4, 2, ships);
+    board.setPopulatedPoints(board.returnPointsToPopulate());
+
+    cout << endl << board.splitInstructions("ABB012323, H").second << endl;
 
 //    if(board.isCorrectlyFormatted("A2, sh")){
 //        cout << "YIPI";
