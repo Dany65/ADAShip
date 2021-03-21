@@ -2,6 +2,7 @@
 // Created by boris on 3/4/21.
 //
 #include <regex>
+#include <algorithm>
 #include<cmath>
 
 #include "Game.h"
@@ -61,8 +62,19 @@ pair<string, int> letPlayerShoot(int length, int height, list<pair<string, int>>
             string numberCoordinate = pointToShoot.substr(letterCoordinates.length());
 
 
-            if (length >= numberFromExcelColumnn(letterCoordinates) && height >= stoi(numberCoordinate)){
-                return pair(letterCoordinates, stoi(numberCoordinate));
+            if (length >= numberFromExcelColumnn(letterCoordinates) && height >= stoi(numberCoordinate)){ // checks  shot is on the map
+                bool pointAlreadyShot = false;
+                for (pair<string, int> point : shotPoints) {
+                    if (point.first == letterCoordinates && point.second == stoi(numberCoordinate)){
+                        cout << "Point is already shot" << endl;
+                        pointAlreadyShot = true;
+                    }
+                } // checked if the point has been shot already
+
+                if (!pointAlreadyShot){ // if point has not been shot, return, otherwise make user pick a new opint
+                    return pair(letterCoordinates, stoi(numberCoordinate));
+                }
+
             } else {
                 cout << "Shot is out of map, try again" << endl;
             }
@@ -120,8 +132,6 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
             } else {
                 cout << "Player two's turn" << endl;
                 pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
-
-
 
             }
 
