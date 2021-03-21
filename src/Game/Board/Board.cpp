@@ -239,8 +239,8 @@ void Board::setShipsDisplay(const vector<vector<char>> &shipsDisplay) {
     Board::shipsDisplay = shipsDisplay;
 }
 
-void Board::setPopulatedPoints(const list<Point> &populatedPoints) {
-    Board::populatedPoints = populatedPoints;
+void Board::setPopulatedPoints() {
+    Board::populatedPoints = returnPointsToPopulate();
 }
 
 void Board::placeShip(pair<pair<string, int>, char> placementInstruction, shared_ptr<Ship> ship, list<Point> *populatedPoints) {

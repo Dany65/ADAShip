@@ -28,7 +28,7 @@ public:
 
     void setShipsDisplay(const vector<vector<char>> &shipsDisplay);
 
-    void setPopulatedPoints(const list <Point> &populatedPoints);
+    void setPopulatedPoints();
 
 private:
     int height_;

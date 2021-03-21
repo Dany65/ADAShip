@@ -18,7 +18,7 @@ vector<int> Menu::gameSetUpSequence() {
             gameMode = getGameMode(); // ask to pick mode
         }
     } while (gameMode == 0);
-    return vector<int> {gameType, gameMode};
+    return vector<int>{gameType, gameMode};
 }
 
 int Menu::getGameType() {

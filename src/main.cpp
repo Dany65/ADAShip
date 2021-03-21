@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include "Game/Game.h"
 #include "Game/Ship/Ship.h"
 #include "Game/Point/Point.h"
 #include "Game/Board/Board.h"
@@ -11,42 +12,32 @@
 
 using namespace std;
 
+
+
 int main() {
-//    vector<int> userConfiguration =  Menu::gameSetUpSequence();
-//    map<string, vector<string>> fileConfiguration = ConfigurationReader::getConfiguration();
+    vector<int> userConfiguration =  Menu::gameSetUpSequence();
+    map<string, vector<string>> fileConfiguration = ConfigurationReader::getConfiguration();
+//    cout << fileConfiguration.find("Board")->second[0] << ", " << fileConfiguration.find("Board")->second[1] << endl << endl << endl << endl;
+//    createShips(fileConfiguration);
+//    int length = stoi(fileConfiguration.find("Board")->first);
+//    int height = stoi(fileConfiguration.find("Board")->second);
+//    cout << length << ", " << height << endl;
+    Game game(fileConfiguration);
+    game.startGame(userConfiguration);
 
-//    pair<string, int> coordinates = {"A", 2};
-
-    Ship ship("Titanik", 2);
-    Ship ship2("Sail", 1);
-
-//    Point point({1, 2},&ship);
-    map<string, Ship> ships;
-
-    ships.insert({ship.getName(), ship});
-    ships.insert({ship2.getName(), ship2});
-
-
-    Board board(4, 2, ships);
-    board.setPopulatedPoints(board.returnPointsToPopulate());
-
-    cout << endl << board.splitInstructions("ABB012323, H").second << endl;
-
-//    if(board.isCorrectlyFormatted("A2, sh")){
-//        cout << "YIPI";
-//    } else {
-//        cout << "NOPE";
-//    }
-//    pair<string, int> yey = board.splitInstructions("B, 0");
-//    cout << yey.first << "  " << yey.second;
-
-//    GameController gameConroller(Game::Game() game,userConfiguration,fileConfiguration);
 //
-//    Game game = Game(userConfiguration, fileConfiguration);
+//    Ship ship("Titanik", 2);
+//    Ship ship2("Sail", 1);
+//    map<string, Ship> ships;
+//    ships.insert({ship.getName(), ship});
+//    ships.insert({ship2.getName(), ship2});
 //
-//   GC *controller = GC::getInstance(userConfiguration, fileConfiguration);
+//    Board playerOneBoard(4, 2, ships);
+//    playerOneBoard.setPopulatedPoints(playerOneBoard.returnPointsToPopulate());
+//
+//    Board playerTwoBoard(4, 2, ships);
+//    playerOneBoard.setPopulatedPoints(playerOneBoard.returnPointsToPopulate());
 
-//   gameCotroller.startgame()
-//  Ship* myShip = new Ship("dot", 1);
+
 
 }

@@ -36,7 +36,6 @@ pair<string, vector<string>> parseBoard(string line) {
     vector<string> dimensions = {"", ""};
 
 
-
     bool firstValueParsed = false;
     for (string::size_type i = 7; i < line.size(); i++) {
         if (line[i] == 'x') {
@@ -83,24 +82,24 @@ pair<string, vector<string>> parseBoat(string line) {
     return pairToReturn;
 }
 
-map<string, vector<string>> ConfigurationReader::getConfiguration (){
-map<string, vector<string>> mapToReturn;
-string line;
-ifstream fileobject;
+map<string, vector<string>> ConfigurationReader::getConfiguration() {
+    map<string, vector<string>> mapToReturn;
+    string line;
+    ifstream fileobject;
 
-fileobject.open("adaship_config.ini");
+    fileobject.open("adaship_config.ini");
 
-while(!fileobject.eof()){
-  getline(fileobject, line); //reads line from file
-  pair<string, vector<string>> keyValue = keyValueParser(line); // pairs key and value
-  if (mapToReturn.count(keyValue.first)==0){
-      mapToReturn.insert({keyValue.first, keyValue.second}); // creates entry in map
-  }
+    while (!fileobject.eof()) {
+        getline(fileobject, line); //reads line from file
+        pair<string, vector<string>> keyValue = keyValueParser(line); // pairs key and value
+        if (mapToReturn.count(keyValue.first) == 0) {
+            mapToReturn.insert({keyValue.first, keyValue.second}); // creates entry in map
+        }
 
-}
-for (const std::pair<string, vector<string>>& pair : mapToReturn) {
-    cout << pair.first << endl;
-} // BETTER EXAMPLE FOUND
-fileobject.close(); //closing ini file
-return mapToReturn;
+    }
+    for (const std::pair<string, vector<string>> &pair : mapToReturn) {
+        cout << pair.first << endl;
+    } // BETTER EXAMPLE FOUND
+    fileobject.close(); //closing ini file
+    return mapToReturn;
 }
