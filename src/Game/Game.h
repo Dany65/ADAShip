@@ -23,6 +23,8 @@ public:
 private:
     Board playerOneBoard;
     Board playerTwoBoard;
+
+    void beginShootingSequence(vector<int> userConfiguration);
 };
 
 

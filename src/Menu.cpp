@@ -21,7 +21,7 @@ vector<int> Menu::gameSetUpSequence() {
     return vector<int>{gameType, gameMode};
 }
 
-int Menu::getGameType() {
+int Menu::getGameType() { //TODO IMPLEMENT QUIT OPTION!!!!
     bool isValid;
     string input;
     do {

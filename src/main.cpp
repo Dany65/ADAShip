@@ -14,8 +14,8 @@ using namespace std;
 
 
 
-int main() {
-    vector<int> userConfiguration =  Menu::gameSetUpSequence();
+int main() { //TODO IMPLEMENT QUIT OPTION!!!!
+    vector<int> userConfiguration =  Menu::gameSetUpSequence(); //TODO IMPLEMENT QUIT OPTION!!!!
     map<string, vector<string>> fileConfiguration = ConfigurationReader::getConfiguration();
 //    cout << fileConfiguration.find("Board")->second[0] << ", " << fileConfiguration.find("Board")->second[1] << endl << endl << endl << endl;
 //    createShips(fileConfiguration);

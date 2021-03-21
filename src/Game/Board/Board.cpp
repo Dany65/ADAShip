@@ -144,7 +144,6 @@ list<Point> Board::returnPointsToPopulate() {
 
 pair<pair<string, int>, char> Board::getPlacementInstructions() {
     string placementInstructions; // A1, H
-    bool isInputValid;
     do {
         cout << "Placement instructions should be in the format of A2, H:" << endl;
         getline(cin >> ws, placementInstructions);
@@ -259,6 +258,22 @@ void Board::updateShipsDisplay(list<Point> populatedPoints) {
     for (Point point : populatedPoints) {
         shipsDisplay[point.getCoordinates().second-1][point.getCoordinates().first-1] = point.getShip()->getName()[0];
     }
+}
+
+const list<Point> &Board::getPopulatedPoints() const {
+    return populatedPoints;
+}
+
+int Board::getLength() const {
+    return length_;
+}
+
+int Board::getHeight() const {
+    return height_;
+}
+
+const map<string, Ship> &Board::getShips() const { // might not be needed
+    return ships_;
 }
 
 //pair<string, string> Board::splitInstructions(string) {

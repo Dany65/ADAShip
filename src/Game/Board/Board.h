@@ -21,14 +21,23 @@ private:
     vector<vector<char>> shotsDisplay;
     vector<vector<char>> shipsDisplay;
     list<Point> populatedPoints = {};
-
-    int length_;
 public:
+    const list <Point> &getPopulatedPoints() const;
+
     void setShotsDisplay(const vector<vector<char>> &shotsDisplay);
 
     void setShipsDisplay(const vector<vector<char>> &shipsDisplay);
 
     void setPopulatedPoints();
+
+private:
+    int length_;
+public:
+    int getLength() const;
+
+    int getHeight() const;
+
+    const map<string, Ship> &getShips() const;
 
 private:
     int height_;
