@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 #include <map>
 #include "../Ship/Ship.h"
 #include "../Point/Point.h"
@@ -19,7 +20,7 @@ private:
 
     vector<vector<char>> shotsDisplay;
     vector<vector<char>> shipsDisplay;
-    vector<Point> populatedPoints = {};
+    list<Point> populatedPoints = {};
 
     int length_;
 public:
@@ -27,7 +28,7 @@ public:
 
     void setShipsDisplay(const vector<vector<char>> &shipsDisplay);
 
-    void setPopulatedPoints(const vector<Point> &populatedPoints);
+    void setPopulatedPoints(const list <Point> &populatedPoints);
 
 private:
     int height_;
@@ -36,7 +37,7 @@ private:
 public:
     Board(int length, int height, map<string, Ship> ships);
 
-    vector<Point> returnPointsToPopulate();
+    list<Point> returnPointsToPopulate();
 
     pair<pair<string, int>, char> splitInstructions(string instructions);
 private:
@@ -49,11 +50,13 @@ private:
     pair<pair<string, int>, char> getPlacementInstructions();
 
     bool shipCanBePlaced(int length, int height, pair<pair<string, int>, char> placementInstructions, int shipLength,
-                         vector<Point> takenUpPositions);
+                         list <Point> takenUpPositions);
 
-    bool willOverlapAnotherShip(pair<pair<string, int>, char> pair, int length, vector<Point> vector);
+    bool willOverlapAnotherShip(pair<pair<string, int>, char> placementInstructions, int shipLength, list <Point> takenUpPoints);
 
-    void placeShip(pair<pair<string, int>, char> placementInstruction, Ship ship, vector<Point> *populatedPoints);
+    void placeShip(pair<pair<string, int>, char> placementInstruction, shared_ptr<Ship> ship, list <Point> *populatedPoints);
+
+    void updateShipsDisplay(list <Point> populatedPoints);
 };
 
 

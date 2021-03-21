@@ -8,21 +8,21 @@
 
 
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
 class Point {
 private:
     pair<int, int> coordinates_; // might not be needed
-    Ship* ship_; // might not be needed
-    bool populated_; // set to true when ship is placed
+    shared_ptr<Ship> ship_; // might not be needed
 public:
-    Point(pair<int, int> coordinates, Ship* ship);
+    Point(pair<int, int> coordinates, shared_ptr<Ship> ship);
     bool isPopulated();
 
     const pair<int, int> &getCoordinates() const;
 
-    Ship *getShip() const;
+    shared_ptr<Ship> getShip() const;
 };
 
 

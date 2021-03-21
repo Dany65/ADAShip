@@ -4,6 +4,7 @@
 
 #include <regex>
 #include<cmath>
+#include <algorithm>
 #include "Board.h"
 
 int numberFromExcelColumn(string column) {
@@ -34,8 +35,8 @@ vector<vector<char>> createShotsDisplay(int length, int height) {  //TODO: finis
         }
     }
 
-    cout << "Shots Display:" << endl;
-    display(vec);
+//    cout << "Shots Display:" << endl;
+//    display(vec);
     return vec;
 }
 
@@ -64,8 +65,8 @@ vector<vector<char>> createShipsDisplay(int length, int height) {
         }
     }
 
-    cout << "Ships Display:" << endl;
-    display(vec);
+//    cout << "Ships Display:" << endl;
+//    display(vec);
     return vec;
 }
 
@@ -78,38 +79,65 @@ Board::Board(int length, int height, map<string, Ship> ships) :
 }
 
 
-vector<Point> Board::returnPointsToPopulate() {
-//    map<string, Ship> shipsToPlace = ships_
+list<Point> Board::returnPointsToPopulate() {
+    list<string> shipsToPlace;
+    for (const auto& pair : ships_) {
+        shipsToPlace.push_back(pair.first);
+    }
+    list<string> placedShips;
+
     cout << "Time to place your ships." << endl;
 
-    vector<Point> pointsToReturn = {};
-    bool shipsPlaced = false;
+    list<Point> pointsToReturn = {};
+    bool allShipsPlaced = false;
 
+    string shipName;
     do {
         display(shipsDisplay);
         cout << "Which ship would you like to place: " << endl;
-        // TODO: Print out ships list
+        cout << "Ships you can relocate: ";
+        for (string shipsToPlace : placedShips) {
+            cout << shipsToPlace << ", ";
+        }
+        cout << endl;
+        cout << "You have to place: ";
+        for (string placableShipName : shipsToPlace) {
+            cout << placableShipName << ", ";
+        }
+        cout << endl;
 
 
-        string shipName;
         getline(cin >> ws, shipName);
-        bool shipExists = (ships_.count(shipName) == 1);
-        //check if ship has been placed already
+        bool shipExist = (ships_.count(shipName) == 1);
+        bool shipPlaced = (any_of(placedShips.begin(), placedShips.end(), [&](const string& elem) { return elem == shipName; }));
+        // Next use new variable shipsToPlace  to check if it has been placed
 
-        if (shipExists) {
-            Ship ship = ships_.find(shipName)->second;
+        if (shipExist && !shipPlaced) {
+            shared_ptr<Ship> ship_ptr = make_shared<Ship>(ships_.find(shipName)->second);
 
             pair<pair<string, int>, char> placementInstructions = getPlacementInstructions();
-            bool isAllowed = shipCanBePlaced(length_, height_, placementInstructions, ship.getLength(), pointsToReturn);
+            bool isAllowed = shipCanBePlaced(length_, height_, placementInstructions, ship_ptr->getLength(), pointsToReturn);
 
             if (isAllowed) {
-                placeShip(placementInstructions, ship, &pointsToReturn);
+                placeShip(placementInstructions, ship_ptr, &pointsToReturn);
+
+                for (Point point : pointsToReturn) {
+                    cout << point.getShip()->getName() << endl;
+                    cout << point.getCoordinates().first << ", " << point.getCoordinates().second << endl;
+                }
+
+                updateShipsDisplay(pointsToReturn);
+                placedShips.push_back(shipName);
+                shipsToPlace.remove(shipName);
                 cout << "Ship Placed" << endl << endl;
             }
-        } else {
+        } else if (shipPlaced){ //TODO: implement placement
+            cout << "This ship has already been placed" << endl;
+        }
+        else {
             cout << "Ship is not on the list, try again." << endl;
         }
-    } while (shipsPlaced); //TODO: make !
+    } while (!shipsToPlace.empty()); //TODO: make !
 
     return pointsToReturn;
 }
@@ -145,7 +173,7 @@ string Board::returnMatch(string stringToUse, string regexToFind) {
 }
 
 bool Board::shipCanBePlaced(int length, int height, pair<pair<string, int>, char> placementInstructions, int shipLength,
-                            vector<Point> takenUpPositions) {
+                            list<Point> takenUpPositions) {
 
     if (placementInstructions.second == 'H') { // if horizontal placement
         cout << placementInstructions.first.first << "   " << length << endl;
@@ -177,7 +205,7 @@ bool Board::shipCanBePlaced(int length, int height, pair<pair<string, int>, char
 }
 
 bool Board::willOverlapAnotherShip(pair<pair<string, int>, char> placementInstructions, int shipLength,
-                                   vector<Point> takenUpPoints) {
+                                   list<Point> takenUpPoints) {
     if (placementInstructions.second == 'H') {
         int startingPosition = numberFromExcelColumn(placementInstructions.first.first);
         for (int i = 0; i < shipLength; ++i) { // tests each position
@@ -211,19 +239,25 @@ void Board::setShipsDisplay(const vector<vector<char>> &shipsDisplay) {
     Board::shipsDisplay = shipsDisplay;
 }
 
-void Board::setPopulatedPoints(const vector<Point> &populatedPoints) {
+void Board::setPopulatedPoints(const list<Point> &populatedPoints) {
     Board::populatedPoints = populatedPoints;
 }
 
-void Board::placeShip(pair<pair<string, int>, char> placementInstruction, Ship ship, vector<Point> *populatedPoints) {
+void Board::placeShip(pair<pair<string, int>, char> placementInstruction, shared_ptr<Ship> ship, list<Point> *populatedPoints) {
     int xCoordinate = numberFromExcelColumn(placementInstruction.first.first);
 
-    for (int i = 0; i < ship.getLength(); ++i) {
+    for (int i = 0; i < ship->getLength(); ++i) {
         if (placementInstruction.second == 'H') {
-            populatedPoints->push_back(Point(pair{xCoordinate+i, placementInstruction.first.second}, &ship));
+            populatedPoints->push_back(Point(pair{xCoordinate+i, placementInstruction.first.second}, ship));
         } else {
-            populatedPoints->push_back(Point(pair{xCoordinate, placementInstruction.first.second+i}, &ship));
+            populatedPoints->push_back(Point(pair{xCoordinate, placementInstruction.first.second+i}, ship));
         }
+    }
+}
+
+void Board::updateShipsDisplay(list<Point> populatedPoints) {
+    for (Point point : populatedPoints) {
+        shipsDisplay[point.getCoordinates().second-1][point.getCoordinates().first-1] = point.getShip()->getName()[0];
     }
 }
 
