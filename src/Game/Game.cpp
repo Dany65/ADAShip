@@ -7,11 +7,11 @@
 
 #include "Game.h"
 
-map<string, Ship> createShips(map<string, vector<string>> fileConfiguration) {
-    map<string, Ship> mapToReturn;
+map<string, shared_ptr<Ship>> createShips(map<string, vector<string>> fileConfiguration) {
+    map<string, shared_ptr<Ship>> mapToReturn;
     for (const auto &pair : fileConfiguration) {
         if (pair.first != "Board") {
-            mapToReturn.insert({pair.first, Ship(pair.first, stoi(pair.second[0]))});
+            mapToReturn.insert({pair.first, make_shared<Ship>(pair.first, stoi(pair.second[0]))});
         }
     }
     return mapToReturn;
@@ -41,7 +41,7 @@ int numberFromExcelColumnn(string column) {
 
 bool allShipsSunk(Board *board) {
     for (const auto &shipKeyValue : board->getShips()) {
-        if (shipKeyValue.second.getHealth() > 0) {
+        if (shipKeyValue.second->getHealth() > 0) {
             return false;
         }
     }
@@ -91,7 +91,8 @@ Game::Game(map<string, vector<string>> fileConfiguration) :
 void Game::initialiseShips(int gameType) {
     if (gameType == 1) {
         cout << "Set up game for Single player" << endl; //TODO Implement auto placement
-//        playerOneBoard.setPopulatedPoints();
+        playerOneBoard.setPopulatedPoints(); // TODO implement pause between placement
+        playerTwoBoard.setPopulatedPointsRandomly();
     } else {
         playerOneBoard.setPopulatedPoints(); // TODO implement pause between placement
         playerTwoBoard.setPopulatedPoints();
@@ -111,26 +112,27 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
 
     bool playerOnesTurn = true;
     while (true) {
-        if (allShipsSunk(&playerOneBoard)) { // checks if player tow has won
-            cout << "Player Two Won!" << endl;
-            break;
-        }
         if (allShipsSunk(&playerTwoBoard)) { // checks if player one has won
             cout << "Player One Won!" << endl;
             break;
         }
+        if (allShipsSunk(&playerOneBoard)) { // checks if player tow has won
+            cout << "Player Two Won!" << endl;
+            break;
+        }
+
 
         if (playerOnesTurn) { // TODO implement salvo here. use userConfiguration to do this
             cout << "Player one's turn" << endl;
             playerOneBoard.display(playerOneBoard.getShotsDisplay());
             pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerOne);
 
-            if (playerTwoBoard.isAHit(shotPoint)){
-                playerOneBoard.recordShot(shotPoint, 'X');
-                playerTwoBoard.shoot(shotPoint);
-            } else {
-                playerOneBoard.recordShot(shotPoint, '*');
-            }
+                if (playerTwoBoard.isAHit(shotPoint)){
+                    playerOneBoard.recordShot(shotPoint, 'X');
+                    playerTwoBoard.shoot(shotPoint);
+                } else {
+                    playerOneBoard.recordShot(shotPoint, '*');
+                }
 
 
             pointsShotByPlayerOne.push_back(shotPoint);
@@ -141,8 +143,16 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
                 cout << "AI SHOULD PLAY HERE" << endl;
             } else {
                 cout << "Player two's turn" << endl;
+                playerTwoBoard.display(playerTwoBoard.getShotsDisplay());
                 pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
-                pointsShotByPlayerOne.push_back(shotPoint);
+                pointsShotByPlayerTwo.push_back(shotPoint);
+
+                if (playerOneBoard.isAHit(shotPoint)){
+                    playerTwoBoard.recordShot(shotPoint, 'X');
+                    playerOneBoard.shoot(shotPoint);
+                } else {
+                    playerTwoBoard.recordShot(shotPoint, '*');
+                }
 
             }
 

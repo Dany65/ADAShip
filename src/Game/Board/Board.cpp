@@ -4,7 +4,8 @@
 
 #include <regex>
 #include <cmath>
-#include <algorithm>
+#include <cstdlib>
+#include <ctime>
 #include "Board.h"
 
 int numberFromExcelColumn(string column) {
@@ -15,6 +16,16 @@ int numberFromExcelColumn(string column) {
         retVal = retVal + colNum * (int) pow(26, column.length() - (iChar + 1));
     }
     return retVal;
+}
+
+
+string intToLetters(int value) {
+    string result = "";
+    while (--value >= 0) {
+        result = (char) ('A' + value % 26) + result;
+        value /= 26;
+    }
+    return result;
 }
 
 void Board::display(vector<vector<char>> toDisplay) {
@@ -70,7 +81,7 @@ vector<vector<char>> createShipsDisplay(int length, int height) {
     return vec;
 }
 
-Board::Board(int length, int height, map<string, Ship> ships) :
+Board::Board(int length, int height, map<string, shared_ptr<Ship>> ships) :
         length_(length),
         height_(height),
         ships_(ships),
@@ -89,42 +100,42 @@ const vector<vector<char>> &Board::getShipsDisplay() const {
 
 list<Point> Board::returnPointsToPopulate() {
     list<string> shipsToPlace;
-    for (const auto& pair : ships_) {
+    for (const auto &pair : ships_) {
         shipsToPlace.push_back(pair.first);
     }
     list<string> placedShips;
 
-    cout << "Time to place your ships." << endl;
+    cout << endl << endl << "Time to place your ships." << endl;
 
     list<Point> pointsToReturn = {};
-    bool allShipsPlaced = false;
-
     string shipName;
+    display(shipsDisplay);
     do {
-        display(shipsDisplay);
         cout << "Which ship would you like to place: " << endl;
         cout << "Ships you can relocate: ";
-        for (string shipsToPlace : placedShips) {
-            cout << shipsToPlace << " long " << ships_.find(shipsToPlace)->second.getLength()  << ", ";
+        for (const string &shipsToPlace : placedShips) {
+            cout << shipsToPlace << " long " << ships_.find(shipsToPlace)->second->getLength() << ", ";
         }
         cout << endl;
         cout << "You have to place: ";
         for (string placeableShipName : shipsToPlace) {
-            cout << placeableShipName << " long " << ships_.find(placeableShipName)->second.getLength() << ", ";
+            cout << placeableShipName << " long " << ships_.find(placeableShipName)->second->getLength() << ", ";
         }
         cout << endl;
 
 
         getline(cin >> ws, shipName);
         bool shipExist = (ships_.count(shipName) == 1);
-        bool shipPlaced = (any_of(placedShips.begin(), placedShips.end(), [&](const string& elem) { return elem == shipName; }));
+        bool shipPlaced = (any_of(placedShips.begin(), placedShips.end(),
+                                  [&](const string &elem) { return elem == shipName; }));
         // Next use new variable shipsToPlace  to check if it has been placed
 
         if (shipExist && !shipPlaced) {
-            shared_ptr<Ship> ship_ptr = make_shared<Ship>(ships_.find(shipName)->second);
+            shared_ptr<Ship> ship_ptr = ships_.find(shipName)->second;
 
             pair<pair<string, int>, char> placementInstructions = getPlacementInstructions();
-            bool isAllowed = shipCanBePlaced(length_, height_, placementInstructions, ship_ptr->getLength(), pointsToReturn);
+            bool isAllowed = shipCanBePlaced(length_, height_, placementInstructions, ship_ptr->getLength(),
+                                             pointsToReturn);
 
             if (isAllowed) {
                 placeShip(placementInstructions, ship_ptr, &pointsToReturn);
@@ -139,12 +150,12 @@ list<Point> Board::returnPointsToPopulate() {
                 shipsToPlace.remove(shipName);
                 cout << "Ship Placed" << endl << endl;
             }
-        } else if (shipPlaced){ //TODO: implement placement
+        } else if (shipPlaced) { //TODO: implement placement
             cout << "This ship has already been placed" << endl;
-        }
-        else {
+        } else {
             cout << "Ship is not on the list, try again." << endl;
         }
+        display(shipsDisplay);
     } while (!shipsToPlace.empty()); //TODO: make !
 
     return pointsToReturn;
@@ -243,32 +254,72 @@ void Board::setShotsDisplay(const vector<vector<char>> &shotsDisplay) {
 }
 
 void Board::recordShot(pair<string, int> coordinates, char symbol) {
-    shotsDisplay[coordinates.second-1][numberFromExcelColumn(coordinates.first)-1] = symbol;
+    shotsDisplay[coordinates.second - 1][numberFromExcelColumn(coordinates.first) - 1] = symbol;
 }
 
 void Board::setShipsDisplay(const vector<vector<char>> &shipsDisplay) {
     Board::shipsDisplay = shipsDisplay;
 }
 
+void Board::setPopulatedPointsRandomly() {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    list<string> shipsToPlace;
+    for (const auto &pair : ships_) {
+        shipsToPlace.push_back(pair.first);
+    }
+
+    list<Point> randomlyPopulatedPoints = {};
+
+    for (string shipName : shipsToPlace) {
+        bool shiPlaced = false;
+        while (!shiPlaced) {
+            int length = (rand() % length_) + 1;
+            int height = (rand() % height_) + 1;
+            char orientation;
+            if ((float) rand()/RAND_MAX <= 0.5){
+                orientation = 'H';
+            } else {
+                orientation = 'V';
+            }
+
+            pair<pair<string, int>, char> instructions = pair(pair(intToLetters(length), height), orientation);
+
+            shared_ptr<Ship> ship_ptr = ships_.find(shipName)->second;
+
+
+            if (shipCanBePlaced(length_, height_, instructions , ship_ptr->getLength(), randomlyPopulatedPoints)) {
+                placeShip(instructions, ship_ptr, &randomlyPopulatedPoints);
+                shiPlaced = true;
+            }
+            updateShipsDisplay(randomlyPopulatedPoints);
+            cout << "Ship Placed" << endl << endl;
+        }
+    }
+    populatedPoints = randomlyPopulatedPoints;
+}
+
 void Board::setPopulatedPoints() {
     Board::populatedPoints = returnPointsToPopulate();
 }
 
-void Board::placeShip(pair<pair<string, int>, char> placementInstruction, shared_ptr<Ship> ship, list<Point> *populatedPoints) {
+void Board::placeShip(pair<pair<string, int>, char> placementInstruction, shared_ptr<Ship> ship,
+                      list<Point> *populatedPoints) {
     int xCoordinate = numberFromExcelColumn(placementInstruction.first.first);
 
     for (int i = 0; i < ship->getLength(); ++i) {
         if (placementInstruction.second == 'H') {
-            populatedPoints->push_back(Point(pair{xCoordinate+i, placementInstruction.first.second}, ship));
+            populatedPoints->push_back(Point(pair{xCoordinate + i, placementInstruction.first.second}, ship));
         } else {
-            populatedPoints->push_back(Point(pair{xCoordinate, placementInstruction.first.second+i}, ship));
+            populatedPoints->push_back(Point(pair{xCoordinate, placementInstruction.first.second + i}, ship));
         }
     }
 }
 
 void Board::updateShipsDisplay(list<Point> populatedPoints) {
     for (Point point : populatedPoints) {
-        shipsDisplay[point.getCoordinates().second-1][point.getCoordinates().first-1] = point.getShip()->getName()[0];
+        shipsDisplay[point.getCoordinates().second - 1][point.getCoordinates().first -
+                                                        1] = point.getShip()->getName()[0];
     }
 }
 
@@ -284,13 +335,14 @@ int Board::getHeight() const {
     return height_;
 }
 
-const map<string, Ship> &Board::getShips() const { // might not be needed
+const map<string, shared_ptr<Ship>> &Board::getShips() const { // might not be needed
     return ships_;
 }
 
 bool Board::isAHit(pair<string, int> coordinates) {
-    for (Point point : populatedPoints){
-        if (point.getCoordinates().first == numberFromExcelColumn(coordinates.first) && point.getCoordinates().second == coordinates.second){
+    for (Point point : populatedPoints) {
+        if (point.getCoordinates().first == numberFromExcelColumn(coordinates.first) &&
+            point.getCoordinates().second == coordinates.second) {
             return true;
         }
     }
@@ -298,38 +350,10 @@ bool Board::isAHit(pair<string, int> coordinates) {
 }
 
 void Board::shoot(pair<string, int> coordinatesToShoot) {
-    for (Point &point : populatedPoints){
-        if (point.getCoordinates().first == numberFromExcelColumn(coordinatesToShoot.first) && point.getCoordinates().second == coordinatesToShoot.second){
-            point.getShip()->setHealth(point.getShip()->getHealth()-1);
+    for (auto &point : populatedPoints) {
+        if (point.getCoordinates().first == numberFromExcelColumn(coordinatesToShoot.first) &&
+            point.getCoordinates().second == coordinatesToShoot.second) {
+            point.getShip()->setHealth(point.getShip()->getHealth() - 1);
         }
     }
 }
-
-//pair<string, string> Board::splitInstructions(string) {
-//
-//    return pair<string, string>();
-//}
-
-//cout << "Place your ships:";
-////    vector<vector<char>> shipsDisplay;
-//vector<vector<char>> shipsDisplay( length , vector<char> (height, 0));
-//
-//for(int i = 0; i < length; i++)
-//{
-//for(int j = 0; j < height; j++)
-//{
-//cout << shipsDisplay[i][j] << " ";
-//}
-//cout<< endl;
-//}
-//
-//
-//vector<Point> populatedPoints;
-//
-//vector<vector<char>> shotsDisplay;
-
-//Board::Board(int length, int height, vector<Ship> ships):
-//length_(length), height_(height), ships_(ships)
-//{
-//cout << "HI"
-//}

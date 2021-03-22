@@ -15,12 +15,7 @@
 using namespace std;
 
 class Board {
-private:
-//    vector<Point> listOfShotPoints; //TODO: might not be needed
 
-    vector<vector<char>> shotsDisplay;
-    vector<vector<char>> shipsDisplay;
-    list<Point> populatedPoints = {};
 public:
     const list <Point> &getPopulatedPoints() const;
 
@@ -28,25 +23,19 @@ public:
 
     void setShipsDisplay(const vector<vector<char>> &shipsDisplay);
 
+    void setPopulatedPointsRandomly();
+
     void setPopulatedPoints();
 
     void shoot(pair<string, int> coordinatesToShoot);
 
-private:
-    int length_;
-public:
+    Board(int length, int height, map<string, shared_ptr<Ship>> ships);
+
     int getLength() const;
 
     int getHeight() const;
 
-    const map<string, Ship> &getShips() const;
-
-private:
-    int height_;
-    map<string, Ship> ships_;
-
-public:
-    Board(int length, int height, map<string, Ship> ships);
+    const map<string, shared_ptr<Ship>> &getShips() const;
 
     list<Point> returnPointsToPopulate();
 
@@ -63,10 +52,9 @@ public:
     bool isAHit(pair<string, int> coordinates);
 
 private:
-//    bool canBePlaced()
-//    pair<string, int> splitInstructions(string instructions);
-
-//    vector<Point> placeShips(vector<Ship> shipsToPlace);
+    int length_;
+    int height_;
+    map<string, shared_ptr<Ship>> ships_;
     static string returnMatch(string stingToUse, string regexToFind) ;
 
     pair<pair<string, int>, char> getPlacementInstructions();
@@ -80,7 +68,9 @@ private:
 
     void updateShipsDisplay(list <Point> populatedPoints);
 
-
+    vector<vector<char>> shotsDisplay;
+    vector<vector<char>> shipsDisplay;
+    list<Point> populatedPoints = {};
 };
 
 
