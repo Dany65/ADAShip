@@ -48,6 +48,7 @@ int Menu::getGameMode() {
         cout << endl << "MENU:" << endl;
         cout << "1. Normal Mode" << endl;
         cout << "2. Salvo Mode" << endl;
+        cout << "3. Mines Mode" << endl;
         cout << "0. To go Back" << endl << endl;
         cout << "Enter 1, 2 or 0";
         getline(cin, input);
@@ -56,13 +57,13 @@ int Menu::getGameMode() {
         if (isValid) {
             return stoi(input);
         } else {
-            cout << "Invalid choice. Enter 1, 2 or 0" << endl;
+            cout << "Invalid choice. Enter 1, 2, 3 or 0" << endl;
         }
     } while (!isValid);
 }
 
 bool Menu::isValidInput(const string &input) {
-    if (input.length() == 1 && isdigit(input[0]) && stoi(input) < 3 && stoi(input) > -1) {
+    if (input.length() == 1 && isdigit(input[0]) && stoi(input) <= 3 && stoi(input) > -1) {
         return true;
     }
     return false;

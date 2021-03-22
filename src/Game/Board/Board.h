@@ -27,7 +27,7 @@ public:
 
     void setPopulatedPoints();
 
-    void shoot(pair<string, int> coordinatesToShoot);
+    pair<bool, string> attemptToSink(pair<string, int> coordinatesToShoot);
 
     Board(int length, int height, map<string, shared_ptr<Ship>> ships);
 
@@ -50,6 +50,10 @@ public:
     void display(vector<vector<char>> toDisplay);
 
     bool isAHit(pair<string, int> coordinates);
+
+    void displayShipAsSunk(string basicString, list <Point> enemyShipPlacement);
+
+    int countAliveShips();
 
 private:
     int length_;

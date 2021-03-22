@@ -25,6 +25,10 @@ private:
     Board playerTwoBoard;
 
     void beginShootingSequence(vector<int> userConfiguration);
+
+    void normalShooterGame(vector<int> userConfiguration);
+
+    void salvoShooterGame(vector<int> userConfiguration);
 };
 
 

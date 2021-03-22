@@ -49,11 +49,12 @@ bool allShipsSunk(Board *board) {
 }
 
 pair<string, int> letPlayerShoot(int length, int height, list<pair<string, int>> shotPoints) {
-    while (true){
-        cout << "Pick a spot on the map to shoot: example A3" << endl;
+    while (true) {
+        cout << "Pick a spot on the map to attemptToSink: example A3" << endl;
         string pointToShoot;
         getline(cin, pointToShoot);
-        bool correctFormat = std::regex_match(pointToShoot, std::regex("^[A-Za-z]{1,}[1-9]{1,}$")); // checkingFormatting of input
+        bool correctFormat = std::regex_match(pointToShoot,
+                                              std::regex("^[A-Za-z]{1,}[1-9]{1,}$")); // checkingFormatting of input
 
         if (correctFormat) {
             //splitting instructions
@@ -62,16 +63,17 @@ pair<string, int> letPlayerShoot(int length, int height, list<pair<string, int>>
             string numberCoordinate = pointToShoot.substr(letterCoordinates.length());
 
 
-            if (length >= numberFromExcelColumnn(letterCoordinates) && height >= stoi(numberCoordinate)){ // checks  shot is on the map
+            if (length >= numberFromExcelColumnn(letterCoordinates) &&
+                height >= stoi(numberCoordinate)) { // checks  shot is on the map
                 bool pointAlreadyShot = false;
                 for (pair<string, int> point : shotPoints) {
-                    if (point.first == letterCoordinates && point.second == stoi(numberCoordinate)){
+                    if (point.first == letterCoordinates && point.second == stoi(numberCoordinate)) {
                         cout << "Point is already shot" << endl;
                         pointAlreadyShot = true;
                     }
                 } // checked if the point has been shot already
 
-                if (!pointAlreadyShot){ // if point has not been shot, return, otherwise make user pick a new opint
+                if (!pointAlreadyShot) { // if point has not been shot, return, otherwise make user pick a new opint
                     return pair(letterCoordinates, stoi(numberCoordinate));
                 }
 
@@ -105,6 +107,19 @@ void Game::startGame(vector<int> userConfiguration) {
 }
 
 void Game::beginShootingSequence(vector<int> userConfiguration) {
+    if (userConfiguration[1] == 1) {
+        normalShooterGame(userConfiguration);
+    } else if (userConfiguration[1] == 2) {
+        salvoShooterGame(userConfiguration);
+    }
+//    else {
+//        minesGame();
+//    }
+}
+
+void Game::normalShooterGame(vector<int> userConfiguration) {
+    cout << "ENTERED normal game" << endl;
+
     int boardLength = playerOneBoard.getLength();
     int boardHeight = playerOneBoard.getHeight();
     list<pair<string, int>> pointsShotByPlayerOne;
@@ -112,6 +127,9 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
 
     bool playerOnesTurn = true;
     while (true) {
+        //picking game mode
+
+
         if (allShipsSunk(&playerTwoBoard)) { // checks if player one has won
             cout << "Player One Won!" << endl;
             break;
@@ -127,19 +145,23 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
             playerOneBoard.display(playerOneBoard.getShotsDisplay());
             pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerOne);
 
-                if (playerTwoBoard.isAHit(shotPoint)){
+            if (playerTwoBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
+                pair<bool, string> shipWasSunk = playerTwoBoard.attemptToSink(shotPoint);
+                if (shipWasSunk.first) {  // displaying ship as sunk to let player know
+                    playerOneBoard.displayShipAsSunk(shipWasSunk.second, playerTwoBoard.getPopulatedPoints());
+                } else { // showing a ship was hit to the player
                     playerOneBoard.recordShot(shotPoint, 'X');
-                    playerTwoBoard.shoot(shotPoint);
-                } else {
-                    playerOneBoard.recordShot(shotPoint, '*');
                 }
+            } else {
+                playerOneBoard.recordShot(shotPoint, '*');
+            }
 
 
             pointsShotByPlayerOne.push_back(shotPoint);
 
             playerOnesTurn = false;
         } else {
-            if (userConfiguration[1] == 2) { // TODO implement AI
+            if (userConfiguration[0] == 1) { // TODO implement AI
                 cout << "AI SHOULD PLAY HERE" << endl;
             } else {
                 cout << "Player two's turn" << endl;
@@ -147,23 +169,100 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
                 pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
                 pointsShotByPlayerTwo.push_back(shotPoint);
 
-                if (playerOneBoard.isAHit(shotPoint)){
-                    playerTwoBoard.recordShot(shotPoint, 'X');
-                    playerOneBoard.shoot(shotPoint);
+                if (playerOneBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
+                    pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(shotPoint);
+                    if (shipWasSunk.first) {  // displaying ship as sunk to let player know
+                        playerTwoBoard.displayShipAsSunk(shipWasSunk.second, playerOneBoard.getPopulatedPoints());
+
+                    } else { // showing a ship was hit to the player
+                        playerTwoBoard.recordShot(shotPoint, 'X');
+                    }
                 } else {
                     playerTwoBoard.recordShot(shotPoint, '*');
                 }
 
             }
-
-
             playerOnesTurn = true;
         }
         cout << "Game will either end on next loop or next player will play" << endl;
     }
+}
+
+void Game::salvoShooterGame(vector<int> userConfiguration) {
+    cout << "ENTERED salvo game" << endl;
+
+    int boardLength = playerOneBoard.getLength();
+    int boardHeight = playerOneBoard.getHeight();
+    list<pair<string, int>> pointsShotByPlayerOne;
+    list<pair<string, int>> pointsShotByPlayerTwo;
+
+    bool playerOnesTurn = true;
+    while (true) {
+
+        if (allShipsSunk(&playerTwoBoard)) { // checks if player one has won
+            cout << "Player One Won!" << endl;
+            break;
+        }
+        if (allShipsSunk(&playerOneBoard)) { // checks if player tow has won
+            cout << "Player Two Won!" << endl;
+            break;
+        }
 
 
+        if (playerOnesTurn) {
+            cout << "Player one's turn:" << endl;
+            playerOneBoard.display(playerOneBoard.getShotsDisplay());
+            cout << "You have to take " << playerOneBoard.countAliveShips() << " shots." << endl;
+            for (int i = 0; i < playerOneBoard.countAliveShips(); ++i) {
 
+                pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerOne);
+
+                if (playerTwoBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
+                    pair<bool, string> shipWasSunk = playerTwoBoard.attemptToSink(shotPoint);
+                    if (shipWasSunk.first) {  // displaying ship as sunk to let player know
+                        playerOneBoard.displayShipAsSunk(shipWasSunk.second, playerTwoBoard.getPopulatedPoints());
+                    } else { // showing a ship was hit to the player
+                        playerOneBoard.recordShot(shotPoint, 'X');
+                    }
+                } else {
+                    playerOneBoard.recordShot(shotPoint, '*');
+                }
+
+
+                pointsShotByPlayerOne.push_back(shotPoint);
+            }
+
+            playerOnesTurn = false;
+        } else {
+            if (userConfiguration[0] == 1) { // TODO implement AI
+                cout << "AI SHOULD PLAY HERE" << endl;
+            } else {
+                cout << "Player two's turn" << endl;
+                playerTwoBoard.display(playerTwoBoard.getShotsDisplay());
+                cout << "You have to take " << playerTwoBoard.countAliveShips() << " shots." << endl;
+                for (int i = 0; i < playerTwoBoard.countAliveShips(); ++i) {
+
+                    pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                    pointsShotByPlayerTwo.push_back(shotPoint);
+
+                    if (playerOneBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
+                        pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(shotPoint);
+                        if (shipWasSunk.first) {  // displaying ship as sunk to let player know
+                            playerTwoBoard.displayShipAsSunk(shipWasSunk.second, playerOneBoard.getPopulatedPoints());
+
+                        } else { // showing a ship was hit to the player
+                            playerTwoBoard.recordShot(shotPoint, 'X');
+                        }
+                    } else {
+                        playerTwoBoard.recordShot(shotPoint, '*');
+                    }
+
+                }
+            }
+            playerOnesTurn = true;
+        }
+        cout << "Game will either end on next loop or next player will play" << endl;
+    }
 }
 
 

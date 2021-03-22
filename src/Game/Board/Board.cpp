@@ -318,8 +318,7 @@ void Board::placeShip(pair<pair<string, int>, char> placementInstruction, shared
 
 void Board::updateShipsDisplay(list<Point> populatedPoints) {
     for (Point point : populatedPoints) {
-        shipsDisplay[point.getCoordinates().second - 1][point.getCoordinates().first -
-                                                        1] = point.getShip()->getName()[0];
+        shipsDisplay[point.getCoordinates().second - 1][point.getCoordinates().first -1] = point.getShip()->getName()[0];
     }
 }
 
@@ -349,11 +348,39 @@ bool Board::isAHit(pair<string, int> coordinates) {
     return false;
 }
 
-void Board::shoot(pair<string, int> coordinatesToShoot) {
+pair<bool, string> Board::attemptToSink(pair<string, int> coordinatesToShoot) {
     for (auto &point : populatedPoints) {
         if (point.getCoordinates().first == numberFromExcelColumn(coordinatesToShoot.first) &&
             point.getCoordinates().second == coordinatesToShoot.second) {
-            point.getShip()->setHealth(point.getShip()->getHealth() - 1);
+
+            string shipName = point.getShip()->getName();
+
+            if (point.getShip()->getHealth()-1 == 0) {
+                point.getShip()->setHealth(0);
+                return pair(true, shipName);
+            } else{
+                point.getShip()->setHealth(point.getShip()->getHealth() - 1);
+                return pair(false, shipName);
+            }
         }
     }
+    return pair(false, "This Should not happen");
+}
+
+void Board::displayShipAsSunk(string basicString, list<Point> enemyShipPlacement) {
+    for (auto &point : enemyShipPlacement) {
+        if (point.getShip()->getName() == basicString) {
+            shotsDisplay[point.getCoordinates().second - 1][point.getCoordinates().first -1] = '%';
+        }
+    }
+}
+
+int Board::countAliveShips(){
+    int count = 0;
+    for (auto &ship : ships_) {
+        if (ship.second->getHealth() > 0) {
+            ++count;
+        }
+    }
+    return count;
 }
