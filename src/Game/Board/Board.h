@@ -30,6 +30,8 @@ public:
 
     void setPopulatedPoints();
 
+    void shoot(pair<string, int> coordinatesToShoot);
+
 private:
     int length_;
 public:
@@ -49,6 +51,17 @@ public:
     list<Point> returnPointsToPopulate();
 
     pair<pair<string, int>, char> splitInstructions(string instructions);
+
+    void recordShot(pair<string, int> coordinates, char symbol);
+
+    const vector<vector<char>> &getShotsDisplay() const;
+
+    const vector<vector<char>> &getShipsDisplay() const;
+
+    void display(vector<vector<char>> toDisplay);
+
+    bool isAHit(pair<string, int> coordinates);
+
 private:
 //    bool canBePlaced()
 //    pair<string, int> splitInstructions(string instructions);
@@ -66,6 +79,8 @@ private:
     void placeShip(pair<pair<string, int>, char> placementInstruction, shared_ptr<Ship> ship, list <Point> *populatedPoints);
 
     void updateShipsDisplay(list <Point> populatedPoints);
+
+
 };
 
 

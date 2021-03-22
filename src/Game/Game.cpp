@@ -122,8 +122,18 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
 
         if (playerOnesTurn) { // TODO implement salvo here. use userConfiguration to do this
             cout << "Player one's turn" << endl;
+            playerOneBoard.display(playerOneBoard.getShotsDisplay());
             pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerOne);
 
+            if (playerTwoBoard.isAHit(shotPoint)){
+                playerOneBoard.recordShot(shotPoint, 'X');
+                playerTwoBoard.shoot(shotPoint);
+            } else {
+                playerOneBoard.recordShot(shotPoint, '*');
+            }
+
+
+            pointsShotByPlayerOne.push_back(shotPoint);
 
             playerOnesTurn = false;
         } else {
@@ -132,6 +142,7 @@ void Game::beginShootingSequence(vector<int> userConfiguration) {
             } else {
                 cout << "Player two's turn" << endl;
                 pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                pointsShotByPlayerOne.push_back(shotPoint);
 
             }
 

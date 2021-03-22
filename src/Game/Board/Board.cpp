@@ -17,7 +17,7 @@ int numberFromExcelColumn(string column) {
     return retVal;
 }
 
-void display(vector<vector<char>> toDisplay) {
+void Board::display(vector<vector<char>> toDisplay) {
     for (int i = 0; i < toDisplay.size(); i++) {
         for (int j = 0; j < toDisplay[0].size(); j++) {
             cout << toDisplay[i][j] << " ";
@@ -76,6 +76,14 @@ Board::Board(int length, int height, map<string, Ship> ships) :
         ships_(ships),
         shipsDisplay(createShipsDisplay(length, height)),
         shotsDisplay(createShotsDisplay(length, height)) {
+}
+
+const vector<vector<char>> &Board::getShotsDisplay() const {
+    return shotsDisplay;
+}
+
+const vector<vector<char>> &Board::getShipsDisplay() const {
+    return shipsDisplay;
 }
 
 
@@ -234,6 +242,10 @@ void Board::setShotsDisplay(const vector<vector<char>> &shotsDisplay) {
     Board::shotsDisplay = shotsDisplay;
 }
 
+void Board::recordShot(pair<string, int> coordinates, char symbol) {
+    shotsDisplay[coordinates.second-1][numberFromExcelColumn(coordinates.first)-1] = symbol;
+}
+
 void Board::setShipsDisplay(const vector<vector<char>> &shipsDisplay) {
     Board::shipsDisplay = shipsDisplay;
 }
@@ -274,6 +286,23 @@ int Board::getHeight() const {
 
 const map<string, Ship> &Board::getShips() const { // might not be needed
     return ships_;
+}
+
+bool Board::isAHit(pair<string, int> coordinates) {
+    for (Point point : populatedPoints){
+        if (point.getCoordinates().first == numberFromExcelColumn(coordinates.first) && point.getCoordinates().second == coordinates.second){
+            return true;
+        }
+    }
+    return false;
+}
+
+void Board::shoot(pair<string, int> coordinatesToShoot) {
+    for (Point &point : populatedPoints){
+        if (point.getCoordinates().first == numberFromExcelColumn(coordinatesToShoot.first) && point.getCoordinates().second == coordinatesToShoot.second){
+            point.getShip()->setHealth(point.getShip()->getHealth()-1);
+        }
+    }
 }
 
 //pair<string, string> Board::splitInstructions(string) {

@@ -10,6 +10,7 @@ Ship::Ship(string name, int length) : name_(name), length_(length), health_(leng
 
 void Ship::setHealth(int newHealth) {
   health_ = newHealth;
+  cout << "Ship " << name_ << " now has health of " << health_ << endl;
 }
 
 const int Ship::getHealth() const {
