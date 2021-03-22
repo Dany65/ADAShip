@@ -70,15 +70,6 @@ vector<vector<char>> createShipsDisplay(int length, int height) {
     return vec;
 }
 
-bool hasShipBeenPlaced(string shipName, list<Ship> placedShips) {
-    for ( Ship ship : placedShips) {
-        if (ship.getName() == shipName){
-            return true;
-        }
-    }
-    return false;
-}
-
 Board::Board(int length, int height, map<string, Ship> ships) :
         length_(length),
         height_(height),
@@ -89,11 +80,11 @@ Board::Board(int length, int height, map<string, Ship> ships) :
 
 
 list<Point> Board::returnPointsToPopulate() {
-    list<Ship> shipsToPlace;
+    list<string> shipsToPlace;
     for (const auto& pair : ships_) {
-        shipsToPlace.push_back(pair.second);
+        shipsToPlace.push_back(pair.first);
     }
-    list<Ship> placedShips;
+    list<string> placedShips;
 
     cout << "Time to place your ships." << endl;
 
@@ -105,22 +96,23 @@ list<Point> Board::returnPointsToPopulate() {
         display(shipsDisplay);
         cout << "Which ship would you like to place: " << endl;
         cout << "Ships you can relocate: ";
-        for (Ship shipToPlace : placedShips) {
-            cout << shipToPlace.getName() << " with length " << shipToPlace.getLength() << ", ";
+        for (string shipsToPlace : placedShips) {
+            cout << shipsToPlace << " long " << ships_.find(shipsToPlace)->second.getLength()  << ", ";
         }
         cout << endl;
         cout << "You have to place: ";
-        for (Ship placableShipName : shipsToPlace) {
-            cout << placableShipName.getName() << " with length " << placableShipName.getLength() << ", ";
+        for (string placeableShipName : shipsToPlace) {
+            cout << placeableShipName << " long " << ships_.find(placeableShipName)->second.getLength() << ", ";
         }
         cout << endl;
 
 
         getline(cin >> ws, shipName);
         bool shipExist = (ships_.count(shipName) == 1);
+        bool shipPlaced = (any_of(placedShips.begin(), placedShips.end(), [&](const string& elem) { return elem == shipName; }));
         // Next use new variable shipsToPlace  to check if it has been placed
 
-        if (shipExist && !hasShipBeenPlaced(shipName, placedShips)) {
+        if (shipExist && !shipPlaced) {
             shared_ptr<Ship> ship_ptr = make_shared<Ship>(ships_.find(shipName)->second);
 
             pair<pair<string, int>, char> placementInstructions = getPlacementInstructions();
@@ -135,11 +127,11 @@ list<Point> Board::returnPointsToPopulate() {
                 }
 
                 updateShipsDisplay(pointsToReturn);
-                placedShips.push_back(ships_.find(shipName)->second);
-                shipsToPlace.remove(ships_.find(shipName)->second);  //TODO BUG IS HEREuse this https://stackoverflow.com/questions/29378849/remove-object-from-c-list
+                placedShips.push_back(shipName);
+                shipsToPlace.remove(shipName);
                 cout << "Ship Placed" << endl << endl;
             }
-        } else if (hasShipBeenPlaced(shipName, placedShips)){ //TODO: implement placement
+        } else if (shipPlaced){ //TODO: implement placement
             cout << "This ship has already been placed" << endl;
         }
         else {
