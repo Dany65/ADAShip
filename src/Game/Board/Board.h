@@ -41,7 +41,8 @@ public:
 
     pair<pair<string, int>, char> splitInstructions(string instructions);
 
-    void recordShot(pair<string, int> coordinates, char symbol);
+    void recordShotOnShotsDisplay(pair<string, int> coordinates, char symbol);
+    void recordShotOnShipsDisplay(pair<string, int> coordinates, char symbol);
 
     const vector<vector<char>> &getShotsDisplay() const;
 
@@ -51,7 +52,8 @@ public:
 
     bool isAHit(pair<string, int> coordinates);
 
-    void displayShipAsSunk(string basicString, list <Point> enemyShipPlacement);
+    void displayShipAsSunkOnShotsDisplay(string basicString, list <Point> shipPlacement);
+    void displayShipAsSunkOnShipsDisplay(string basicString);
 
     int countAliveShips();
 
@@ -75,6 +77,7 @@ private:
     vector<vector<char>> shotsDisplay;
     vector<vector<char>> shipsDisplay;
     list<Point> populatedPoints = {};
+
 };
 
 

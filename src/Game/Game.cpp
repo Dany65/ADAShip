@@ -92,7 +92,7 @@ Game::Game(map<string, vector<string>> fileConfiguration) :
 
 void Game::initialiseShips(int gameType) {
     if (gameType == 1) {
-        cout << "Set up game for Single player" << endl; //TODO Implement auto placement
+        cout << "Set up game for Single player" << endl;
         playerOneBoard.setPopulatedPoints(); // TODO implement pause between placement
         playerTwoBoard.setPopulatedPointsRandomly();
     } else {
@@ -102,8 +102,8 @@ void Game::initialiseShips(int gameType) {
 }
 
 void Game::startGame(vector<int> userConfiguration) {
-    initialiseShips(userConfiguration[0]); //TODO Implement auto placement for Single Player Mode
-    beginShootingSequence(userConfiguration); //TODO implement Salvo Mode
+    initialiseShips(userConfiguration[0]);
+    beginShootingSequence(userConfiguration);
 }
 
 void Game::beginShootingSequence(vector<int> userConfiguration) {
@@ -141,19 +141,30 @@ void Game::normalShooterGame(vector<int> userConfiguration) {
 
 
         if (playerOnesTurn) { // TODO implement salvo here. use userConfiguration to do this
-            cout << "Player one's turn" << endl;
+            cout << "Player one's turn!" << endl;
+            cout << "Your field:" << endl;
+            playerOneBoard.display(playerOneBoard.getShipsDisplay());
+
+            cout << endl << endl <<"Opponents field: " << endl;
             playerOneBoard.display(playerOneBoard.getShotsDisplay());
+
             pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerOne);
 
-            if (playerTwoBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
-                pair<bool, string> shipWasSunk = playerTwoBoard.attemptToSink(shotPoint);
-                if (shipWasSunk.first) {  // displaying ship as sunk to let player know
-                    playerOneBoard.displayShipAsSunk(shipWasSunk.second, playerTwoBoard.getPopulatedPoints());
+            if (playerTwoBoard.isAHit(shotPoint)) { // if the shot is a hit
+                pair<bool, string> shipWasSunk = playerTwoBoard.attemptToSink(shotPoint); // see if the shot sunk the ship it hit
+                if (shipWasSunk.first) {  // if it sunk the ship it hit
+                    playerOneBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
+                                                                   playerTwoBoard.getPopulatedPoints()); // update your shots display so you know you sunk it WORKS
+                    playerTwoBoard.displayShipAsSunkOnShipsDisplay(shipWasSunk.second); // make player two update their ships board as that ship being sunk
+
                 } else { // showing a ship was hit to the player
-                    playerOneBoard.recordShot(shotPoint, 'X');
+                    playerOneBoard.recordShotOnShotsDisplay(shotPoint, 'X');
+                    playerTwoBoard.recordShotOnShipsDisplay(shotPoint, 'X');
                 }
             } else {
-                playerOneBoard.recordShot(shotPoint, '*');
+                playerOneBoard.recordShotOnShotsDisplay(shotPoint, '*');
+                playerTwoBoard.recordShotOnShipsDisplay(shotPoint, '*');
+
             }
 
 
@@ -165,20 +176,31 @@ void Game::normalShooterGame(vector<int> userConfiguration) {
                 cout << "AI SHOULD PLAY HERE" << endl;
             } else {
                 cout << "Player two's turn" << endl;
+
+                cout << "Your field:" << endl;
+                playerTwoBoard.display(playerTwoBoard.getShipsDisplay());
+
+                cout << endl << endl <<"Opponents field: " << endl;
                 playerTwoBoard.display(playerTwoBoard.getShotsDisplay());
+
                 pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
                 pointsShotByPlayerTwo.push_back(shotPoint);
 
-                if (playerOneBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
-                    pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(shotPoint);
-                    if (shipWasSunk.first) {  // displaying ship as sunk to let player know
-                        playerTwoBoard.displayShipAsSunk(shipWasSunk.second, playerOneBoard.getPopulatedPoints());
+                if (playerOneBoard.isAHit(shotPoint)) { // if shot was a hit
+                    pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(shotPoint); //see if it sunk a ship
+                    if (shipWasSunk.first) {  // shot sunk a ship
+                        playerTwoBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
+                                                                       playerOneBoard.getPopulatedPoints()); // update your shots map show that
+                        playerOneBoard.displayShipAsSunkOnShipsDisplay(shipWasSunk.second); // make opponent update their ships map so they know it's sunk
+                    } else { // ig the ship was not sunk
+                        playerTwoBoard.recordShotOnShotsDisplay(shotPoint, 'X'); // update your shots map as a hit
+                        playerOneBoard.recordShotOnShipsDisplay(shotPoint, 'X'); //make opponent update their ships map as a hit
 
-                    } else { // showing a ship was hit to the player
-                        playerTwoBoard.recordShot(shotPoint, 'X');
                     }
                 } else {
-                    playerTwoBoard.recordShot(shotPoint, '*');
+                    playerTwoBoard.recordShotOnShotsDisplay(shotPoint, '*');
+                    playerOneBoard.recordShotOnShipsDisplay(shotPoint, '*');
+
                 }
 
             }
@@ -220,12 +242,13 @@ void Game::salvoShooterGame(vector<int> userConfiguration) {
                 if (playerTwoBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
                     pair<bool, string> shipWasSunk = playerTwoBoard.attemptToSink(shotPoint);
                     if (shipWasSunk.first) {  // displaying ship as sunk to let player know
-                        playerOneBoard.displayShipAsSunk(shipWasSunk.second, playerTwoBoard.getPopulatedPoints());
+                        playerOneBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
+                                                                       playerTwoBoard.getPopulatedPoints());
                     } else { // showing a ship was hit to the player
-                        playerOneBoard.recordShot(shotPoint, 'X');
+                        playerOneBoard.recordShotOnShotsDisplay(shotPoint, 'X');
                     }
                 } else {
-                    playerOneBoard.recordShot(shotPoint, '*');
+                    playerOneBoard.recordShotOnShotsDisplay(shotPoint, '*');
                 }
 
 
@@ -248,13 +271,14 @@ void Game::salvoShooterGame(vector<int> userConfiguration) {
                     if (playerOneBoard.isAHit(shotPoint)) { // deciding how to update the shotsDisplay for the player
                         pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(shotPoint);
                         if (shipWasSunk.first) {  // displaying ship as sunk to let player know
-                            playerTwoBoard.displayShipAsSunk(shipWasSunk.second, playerOneBoard.getPopulatedPoints());
+                            playerTwoBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
+                                                                           playerOneBoard.getPopulatedPoints());
 
                         } else { // showing a ship was hit to the player
-                            playerTwoBoard.recordShot(shotPoint, 'X');
+                            playerTwoBoard.recordShotOnShotsDisplay(shotPoint, 'X');
                         }
                     } else {
-                        playerTwoBoard.recordShot(shotPoint, '*');
+                        playerTwoBoard.recordShotOnShotsDisplay(shotPoint, '*');
                     }
 
                 }

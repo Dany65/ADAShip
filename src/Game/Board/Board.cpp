@@ -29,7 +29,18 @@ string intToLetters(int value) {
 }
 
 void Board::display(vector<vector<char>> toDisplay) {
+    cout << "    ";
+    for (int i = 1; i < toDisplay[0].size()+1; ++i) {
+        cout << intToLetters(i) << " ";
+    }
+    cout << endl;
+    cout << "    ";
+    for (int i = 1; i < toDisplay[0].size()+1; ++i) {
+        cout << "- ";
+    }
+    cout << endl;
     for (int i = 0; i < toDisplay.size(); i++) {
+        cout << i+1 << " | ";
         for (int j = 0; j < toDisplay[0].size(); j++) {
             cout << toDisplay[i][j] << " ";
         }
@@ -253,8 +264,12 @@ void Board::setShotsDisplay(const vector<vector<char>> &shotsDisplay) {
     Board::shotsDisplay = shotsDisplay;
 }
 
-void Board::recordShot(pair<string, int> coordinates, char symbol) {
+void Board::recordShotOnShotsDisplay(pair<string, int> coordinates, char symbol) {
     shotsDisplay[coordinates.second - 1][numberFromExcelColumn(coordinates.first) - 1] = symbol;
+}
+
+void Board::recordShotOnShipsDisplay(pair<string, int> coordinates, char symbol) {
+    shipsDisplay[coordinates.second - 1][numberFromExcelColumn(coordinates.first) - 1] = symbol;
 }
 
 void Board::setShipsDisplay(const vector<vector<char>> &shipsDisplay) {
@@ -367,10 +382,18 @@ pair<bool, string> Board::attemptToSink(pair<string, int> coordinatesToShoot) {
     return pair(false, "This Should not happen");
 }
 
-void Board::displayShipAsSunk(string basicString, list<Point> enemyShipPlacement) {
-    for (auto &point : enemyShipPlacement) {
+void Board::displayShipAsSunkOnShotsDisplay(string basicString, list<Point> shipPlacement) {
+    for (auto &point : shipPlacement) {
         if (point.getShip()->getName() == basicString) {
             shotsDisplay[point.getCoordinates().second - 1][point.getCoordinates().first -1] = '%';
+        }
+    }
+}
+
+void Board::displayShipAsSunkOnShipsDisplay(string basicString) {
+    for (auto &point : populatedPoints) {
+        if (point.getShip()->getName() == basicString) {
+            shipsDisplay[point.getCoordinates().second - 1][point.getCoordinates().first -1] = '%';
         }
     }
 }
