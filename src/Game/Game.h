@@ -19,11 +19,11 @@ public:
     Game(map<string, vector<string>> fileConfiguration);
 
     void startGame(vector<int> userConfiguration);
-    void initialiseShips(int gameType); // TODO move out of class
 private:
     Board playerOneBoard;
     Board playerTwoBoard;
 
+    void initialiseShips(int gameType); // TODO move out of class
     void beginShootingSequence(vector<int> userConfiguration);
 
     void normalShooterGame(vector<int> userConfiguration);
