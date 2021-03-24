@@ -347,7 +347,8 @@ void Game::minesGame(vector<int> userConfiguration) {
         playerOneBoard.recordOnShipsDisplay(pair, 'M');
     } // records mines positions so player one can see them
 
-    list<pair<string, int>> minesForPlayerTwo = generateMineLocations(playerTwoBoard.getPopulatedPoints());
+    list<pair < string, int>>
+    minesForPlayerTwo = generateMineLocations(playerTwoBoard.getPopulatedPoints());
     for (pair<string, int> pair : minesForPlayerTwo) {
         playerTwoBoard.recordOnShipsDisplay(pair, 'M');
     } // records mines positions so player two can see them
@@ -389,6 +390,8 @@ void Game::minesGame(vector<int> userConfiguration) {
                     playerTwoBoard.recordOnShipsDisplay(shotPoint, 'X');
                 }
             } else if (shotHitAMine(shotPoint, minesForPlayerTwo)) {
+                playerOneBoard.recordOnShotsDisplay(shotPoint, '@');
+                playerTwoBoard.recordOnShipsDisplay(shotPoint, '@');
                 list<pair < string, int>>
                 positionsHit = positionsHitByExplosion(shotPoint);
                 for (pair<string, int> position : positionsHit) {
@@ -417,58 +420,62 @@ void Game::minesGame(vector<int> userConfiguration) {
             }
             playerOnesTurn = false;
         } else {
+            cout << "Player two's turn" << endl;
+
+            cout << "Your field:" << endl;
+            playerTwoBoard.display(playerTwoBoard.getShipsDisplay());
+
+            cout << endl << endl << "Opponents field: " << endl;
+            playerTwoBoard.display(playerTwoBoard.getShotsDisplay());
+
+            pair<string, int> shotPoint;
             if (userConfiguration[0] == 1) { // TODO implement AI
                 cout << "AI SHOULD PLAY HERE" << endl;
             } else {
-                cout << "Player two's turn" << endl;
+                shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+            }
+            pointsShotByPlayerTwo.push_back(shotPoint);
 
-                cout << "Your field:" << endl;
-                playerTwoBoard.display(playerTwoBoard.getShipsDisplay());
+            if (playerOneBoard.isAHit(shotPoint)) { // if shot was a hit
+                pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(shotPoint); //see if it sunk a ship
+                if (shipWasSunk.first) {  // shot sunk a ship
+                    playerTwoBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
+                                                                   playerOneBoard.getPopulatedPoints()); // update your shots map show that
+                    playerOneBoard.displayShipAsSunkOnShipsDisplay(
+                            shipWasSunk.second); // make opponent update their ships map so they know it's sunk
+                } else { // ig the ship was not sunk
+                    playerTwoBoard.recordOnShotsDisplay(shotPoint, 'X'); // update your shots map as a hit
+                    playerOneBoard.recordOnShipsDisplay(shotPoint,
+                                                        'X'); //make opponent update their ships map as a hit
 
-                cout << endl << endl << "Opponents field: " << endl;
-                playerTwoBoard.display(playerTwoBoard.getShotsDisplay());
-
-                pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
-                pointsShotByPlayerTwo.push_back(shotPoint);
-
-                if (playerOneBoard.isAHit(shotPoint)) { // if shot was a hit
-                    pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(shotPoint); //see if it sunk a ship
-                    if (shipWasSunk.first) {  // shot sunk a ship
-                        playerTwoBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
-                                                                       playerOneBoard.getPopulatedPoints()); // update your shots map show that
-                        playerOneBoard.displayShipAsSunkOnShipsDisplay(
-                                shipWasSunk.second); // make opponent update their ships map so they know it's sunk
-                    } else { // ig the ship was not sunk
-                        playerTwoBoard.recordOnShotsDisplay(shotPoint, 'X'); // update your shots map as a hit
-                        playerOneBoard.recordOnShipsDisplay(shotPoint,
-                                                            'X'); //make opponent update their ships map as a hit
-
-                    }
-                } else if (shotHitAMine(shotPoint, minesForPlayerOne)) {
-                    list<pair < string, int>> positionsHit = positionsHitByExplosion(shotPoint);
-                    for (pair<string, int> position : positionsHit) {
-                        if (playerOneBoard.isAHit(position)) { // if explosion point hit a ship
-                            pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(position); //see if it sunk a ship
-                            if (shipWasSunk.first) {  // shot sunk a ship
-                                playerTwoBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
-                                                                               playerOneBoard.getPopulatedPoints()); // update your shots map show that
-                                playerOneBoard.displayShipAsSunkOnShipsDisplay(
-                                        shipWasSunk.second); // make opponent update their ships map so they know it's sunk
-                            } else { // ig the ship was not sunk
-                                playerTwoBoard.recordOnShotsDisplay(position, 'X'); // update your shots map as a hit
-                                playerOneBoard.recordOnShipsDisplay(position,
-                                                                    'X'); //make opponent update their ships map as a hit
-
-                            }
-                        } else {
-                            playerTwoBoard.recordOnShotsDisplay(shotPoint, '*');
-                            playerOneBoard.recordOnShipsDisplay(shotPoint, '*');
-                        }
-                    }
-                } else {
-                    playerTwoBoard.recordOnShotsDisplay(shotPoint, '*');
-                    playerOneBoard.recordOnShipsDisplay(shotPoint, '*');
                 }
+            } else if (shotHitAMine(shotPoint, minesForPlayerOne)) {
+                playerTwoBoard.recordOnShotsDisplay(shotPoint, '@');
+                playerOneBoard.recordOnShipsDisplay(shotPoint, '@');
+
+                list<pair<string, int>> positionsHit = positionsHitByExplosion(shotPoint);
+                for (pair<string, int> position : positionsHit) {
+                    if (playerOneBoard.isAHit(position)) { // if explosion point hit a ship
+                        pair<bool, string> shipWasSunk = playerOneBoard.attemptToSink(position); //see if it sunk a ship
+                        if (shipWasSunk.first) {  // shot sunk a ship
+                            playerTwoBoard.displayShipAsSunkOnShotsDisplay(shipWasSunk.second,
+                                                                           playerOneBoard.getPopulatedPoints()); // update your shots map show that
+                            playerOneBoard.displayShipAsSunkOnShipsDisplay(
+                                    shipWasSunk.second); // make opponent update their ships map so they know it's sunk
+                        } else { // ig the ship was not sunk
+                            playerTwoBoard.recordOnShotsDisplay(position, 'X'); // update your shots map as a hit
+                            playerOneBoard.recordOnShipsDisplay(position,
+                                                                'X'); //make opponent update their ships map as a hit
+
+                        }
+                    } else {
+                        playerTwoBoard.recordOnShotsDisplay(position, '*');
+                        playerOneBoard.recordOnShipsDisplay(position, '*');
+                    }
+                }
+            } else {
+                playerTwoBoard.recordOnShotsDisplay(shotPoint, '*');
+                playerOneBoard.recordOnShipsDisplay(shotPoint, '*');
             }
             playerOnesTurn = true;
         }
@@ -517,7 +524,6 @@ list<pair<string, int>> Game::positionsHitByExplosion(pair<string, int> mineLoca
         positionsToReturn.push_back(pair(mineLocation.first, height - 1));
         if (length > 1) {
             positionsToReturn.push_back(pair(intToLetterss(length - 1), height - 1));
-            positionsToReturn.push_back(pair(intToLetterss(length - 1), height));
         }
         if (length < playerOneBoard.getLength()) {
             positionsToReturn.push_back(pair(intToLetterss(length + 1), height - 1));
@@ -528,12 +534,19 @@ list<pair<string, int>> Game::positionsHitByExplosion(pair<string, int> mineLoca
         positionsToReturn.push_back(pair(mineLocation.first, height + 1));
         if (length > 1) {
             positionsToReturn.push_back(pair(intToLetterss(length - 1), height + 1));
-            positionsToReturn.push_back(pair(intToLetterss(length - 1), height));
         }
         if (length < playerOneBoard.getLength()) {
             positionsToReturn.push_back(pair(intToLetterss(length + 1), height + 1));
             positionsToReturn.push_back(pair(intToLetterss(length + 1), height));
         }
+    }
+
+    if (length > 1) {
+        positionsToReturn.push_back(pair(intToLetterss(length - 1), height));
+    }
+
+    if (length < playerOneBoard.getLength()) {
+        positionsToReturn.push_back(pair(intToLetterss(length + 1), height));
     }
     return positionsToReturn;
 }
