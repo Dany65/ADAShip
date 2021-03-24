@@ -155,10 +155,6 @@ list<Point> Board::returnPointsToPopulate() {
     display(shipsDisplay);
     do {
         cout << "Which ship would you like to place: " << endl;
-//        cout << "Ships you can relocate: ";
-//        for (const string &shipsToPlace : placedShips) {
-//            cout << shipsToPlace << " long " << ships_.find(shipsToPlace)->second->getLength() << ", ";
-//        }
         cout << endl;
         cout << "You have to place: ";
         for (string placeableShipName : shipsToPlace) {
@@ -188,13 +184,13 @@ list<Point> Board::returnPointsToPopulate() {
                 shipsToPlace.remove(shipName);
                 cout << "Ship Placed" << endl << endl;
             }
-        } else if (shipPlaced) { //TODO: implement placement
+        } else if (shipPlaced) {
             cout << "This ship has already been placed" << endl;
         } else {
             cout << "Ship is not on the list, try again." << endl;
         }
         display(shipsDisplay);
-    } while (!shipsToPlace.empty()); //TODO: make !
+    } while (!shipsToPlace.empty());
 
     return pointsToReturn;
 }
