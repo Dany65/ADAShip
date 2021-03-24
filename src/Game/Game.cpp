@@ -250,7 +250,6 @@ void Game::normalShooterGame(vector<int> userConfiguration) {
                 }
             playerOnesTurn = true;
         }
-        cout << "Game will either end on next loop or next player will play" << endl;
     }
 }
 
@@ -348,7 +347,6 @@ void Game::salvoShooterGame(vector<int> userConfiguration) {
                 }
             playerOnesTurn = true;
         }
-        cout << "Game will either end on next loop or next player will play" << endl;
     }
 }
 
@@ -503,7 +501,6 @@ void Game::minesGame(vector<int> userConfiguration) {
             }
             playerOnesTurn = true;
         }
-        cout << "Game will either end on next loop or next player will play" << endl;
     }
 }
 

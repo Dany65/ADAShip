@@ -40,9 +40,7 @@ int count_digits(int number) {
 
 void Board::display(vector<vector<char>> toDisplay) {
     int xLength = intToLetters(toDisplay[0].size()).length();
-    cout << xLength << endl;;
     int yLength = count_digits(toDisplay.size());
-    cout << yLength << endl;
 
     int formatter = (xLength > yLength ? xLength : yLength) + 1;
 
@@ -185,11 +183,6 @@ list<Point> Board::returnPointsToPopulate() {
             if (isAllowed) {
                 placeShip(placementInstructions, ship_ptr, &pointsToReturn);
 
-                for (Point point : pointsToReturn) {
-                    cout << point.getShip()->getName() << endl;
-                    cout << point.getCoordinates().first << ", " << point.getCoordinates().second << endl;
-                }
-
                 updateShipsDisplay(pointsToReturn);
                 placedShips.push_back(shipName);
                 shipsToPlace.remove(shipName);
@@ -239,8 +232,6 @@ bool Board::shipCanBePlaced(int length, int height, pair<pair<string, int>, char
                             list<Point> takenUpPositions) {
 
     if (placementInstructions.second == 'H') { // if horizontal placement
-        cout << placementInstructions.first.first << "   " << length << endl;
-        cout << placementInstructions.first.second << "   " << height << endl;
         if ((numberFromExcelColumn(placementInstructions.first.first) + shipLength - 1 <= length) &&
             placementInstructions.first.second <= height) { // ship fits on map putting ship right
             if (!willOverlapAnotherShip(placementInstructions, shipLength,

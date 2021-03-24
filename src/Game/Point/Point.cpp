@@ -9,7 +9,6 @@
 
 
 Point::Point(pair<int, int> coordinates, shared_ptr<Ship> ship): coordinates_(coordinates), ship_(ship) {
-    cout << "Point created at: " << coordinates.first << ", " <<  coordinates.second << ". populated by " << ship->getName() << endl;
 }
 
 const pair<int, int> &Point::getCoordinates() const {

@@ -98,7 +98,6 @@ map<string, vector<string>> ConfigurationReader::getConfiguration() {
 
     }
     for (const std::pair<string, vector<string>> &pair : mapToReturn) {
-        cout << pair.first << endl;
     } // BETTER EXAMPLE FOUND
     fileobject.close(); //closing ini file
     return mapToReturn;
