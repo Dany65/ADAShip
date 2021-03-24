@@ -97,6 +97,29 @@ pair<string, int> letPlayerShoot(int length, int height, list<pair<string, int>>
     }
 }
 
+pair<string, int> letAIShoot(int length, int height, list<pair<string, int>> shotPoints) {
+
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    while (true){
+        int intX = (rand() % length) + 1;
+        string x = intToLetterss(intX);
+        int y = (rand() % height) + 1;
+
+        bool uniquePoint = true;
+        for (pair<string, int> point : shotPoints) {
+            if (point.first == x && point.second == y){
+                uniquePoint = false;
+            }
+        }
+
+        if (uniquePoint){
+            return pair(x, y);
+        }
+    }
+}
+
+
 
 bool shotHitAMine(pair<string, int> shotPoint, list<pair<string, int>> mineLocations) {
     for (pair<string, int> mine : mineLocations) {
@@ -192,9 +215,6 @@ void Game::normalShooterGame(vector<int> userConfiguration) {
             }
             playerOnesTurn = false;
         } else {
-            if (userConfiguration[0] == 1) { // TODO implement AI
-                cout << "AI SHOULD PLAY HERE" << endl;
-            } else {
                 cout << "Player two's turn" << endl;
 
                 cout << "Your field:" << endl;
@@ -203,7 +223,12 @@ void Game::normalShooterGame(vector<int> userConfiguration) {
                 cout << endl << endl << "Opponents field: " << endl;
                 playerTwoBoard.display(playerTwoBoard.getShotsDisplay());
 
-                pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                pair<string, int> shotPoint;
+                if (userConfiguration[0] == 1) { // TODO implement AI
+                    shotPoint = letAIShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                } else {
+                    shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                }
                 pointsShotByPlayerTwo.push_back(shotPoint);
 
                 if (playerOneBoard.isAHit(shotPoint)) { // if shot was a hit
@@ -223,7 +248,6 @@ void Game::normalShooterGame(vector<int> userConfiguration) {
                     playerTwoBoard.recordOnShotsDisplay(shotPoint, '*');
                     playerOneBoard.recordOnShipsDisplay(shotPoint, '*');
                 }
-            }
             playerOnesTurn = true;
         }
         cout << "Game will either end on next loop or next player will play" << endl;
@@ -285,9 +309,6 @@ void Game::salvoShooterGame(vector<int> userConfiguration) {
 
             playerOnesTurn = false;
         } else {
-            if (userConfiguration[0] == 1) { // TODO implement AI
-                cout << "AI SHOULD PLAY HERE" << endl;
-            } else {
                 cout << "Player two's turn" << endl;
 
                 cout << "Your field:" << endl;
@@ -298,8 +319,12 @@ void Game::salvoShooterGame(vector<int> userConfiguration) {
 
                 cout << endl << "You have to take " << playerTwoBoard.countAliveShips() << " shots." << endl;
                 for (int i = 0; i < playerTwoBoard.countAliveShips(); ++i) {
-
-                    pair<string, int> shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                    pair<string, int> shotPoint;
+                    if (userConfiguration[0] == 1) { // TODO implement AI
+                        shotPoint = letAIShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                    } else {
+                        shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
+                    }
                     pointsShotByPlayerTwo.push_back(shotPoint);
 
                     if (playerOneBoard.isAHit(shotPoint)) { // if shot was a hit
@@ -321,7 +346,6 @@ void Game::salvoShooterGame(vector<int> userConfiguration) {
                         playerOneBoard.recordOnShipsDisplay(shotPoint, '*');
                     }
                 }
-            }
             playerOnesTurn = true;
         }
         cout << "Game will either end on next loop or next player will play" << endl;
@@ -430,7 +454,7 @@ void Game::minesGame(vector<int> userConfiguration) {
 
             pair<string, int> shotPoint;
             if (userConfiguration[0] == 1) { // TODO implement AI
-                cout << "AI SHOULD PLAY HERE" << endl;
+                shotPoint = letAIShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
             } else {
                 shotPoint = letPlayerShoot(boardLength, boardHeight, pointsShotByPlayerTwo);
             }

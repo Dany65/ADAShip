@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <iomanip>
 #include "Board.h"
 
 int numberFromExcelColumn(string column) {
@@ -28,24 +29,57 @@ string intToLetters(int value) {
     return result;
 }
 
+int count_digits(int number) {
+    int count = 0;
+    while(number != 0) {
+        number = number / 10;
+        count++;
+    }
+    return count;
+}
+
 void Board::display(vector<vector<char>> toDisplay) {
-    cout << "    ";
-    for (int i = 1; i < toDisplay[0].size()+1; ++i) {
-        cout << intToLetters(i) << " ";
+    int xLength = intToLetters(toDisplay[0].size()).length();
+    cout << xLength << endl;;
+    int yLength = count_digits(toDisplay.size());
+    cout << yLength << endl;
+
+    int formatter = (xLength > yLength ? xLength : yLength) + 1;
+
+    string buffer = "";
+    for (int i = 0; i < formatter; ++i) {
+        buffer += " ";
+    }
+
+
+    cout<< buffer << "   ";
+    for (int i = 1; i < toDisplay[0].size()+1; ++i) { // Printing letters
+        cout<<left<<setw(formatter)<<setfill(' ') << intToLetters(i);
     }
     cout << endl;
-    cout << "    ";
-    for (int i = 1; i < toDisplay[0].size()+1; ++i) {
-        cout << "- ";
+
+    cout<< buffer << "   ";
+    for (int i = 1; i < toDisplay[0].size()+1; ++i) { // Printing letters
+        cout<<left<<setw(formatter)<<setfill(' ') << '-';
     }
     cout << endl;
+
     for (int i = 0; i < toDisplay.size(); i++) {
-        cout << i+1 << " | ";
+        string positionToPrint = to_string(i+1); // " | ";
+        cout<<left<<setw(buffer.length())<<setfill(' ') << positionToPrint << " | ";
         for (int j = 0; j < toDisplay[0].size(); j++) {
-            cout << toDisplay[i][j] << " ";
+            cout<<left<<setw(formatter)<<setfill(' ') << toDisplay[i][j];
         }
         cout << endl;
     }
+//
+//    for (int i = 0; i < toDisplay.size(); i++) {
+//        cout<<left<<setw(count_digits(toDisplay[0].size()))<<setfill(' ')<< i+1 << " | ";
+//        for (int j = 0; j < toDisplay[0].size(); j++) {
+//            cout<<left<<setw(count_digits(toDisplay[0].size()))<<setfill(' ') << toDisplay[i][j] << " ";
+//        }
+//        cout << endl;
+//    }
 }
 
 vector<vector<char>> createShotsDisplay(int length, int height) {  //TODO: finish Coordinates part
