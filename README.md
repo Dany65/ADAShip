@@ -112,3 +112,26 @@ I was very defencive when creating each phase, ensuring only validated and expec
 ### i) Reflection on key design challenges and how i solved them
 * SharedPointers - I ran into an issue where a ship would print on the screen that it was hit, but it would not sink once it reached 0 health. This was caused by me coppying the Ship object from the hit Point and passing it to a function which decreased the health of the coppy. The way i solved is was by using a Shared Pointer.
 * Ship Placement - Ship placement involved parsing complicated user input and my initial attempts to create a custom parser were unsuccessful. I solved this by learning how to use regex and taking advantage of it to check the input instead of writing a parser.
+
+## 3. Evaluation
+
+### a) Analysis with embedded examples of key code refactoring, reuse, smells
+* Bellow you can see an example of code reuse. I made both isAHit and attemptToSink. knowing that each of the 3 game modes will need them, so i ensured they take only input that will be availible in all modes. The first uses the internal information of the Board object and checks if the shotPoint is a hit (returns true) or a miss (false)
+similarly, attempt to sink is universal as it takes the same variable as isAHit(), meaning it does not depend on mode specific variables.
+![](CodeReuse.png)
+
+
+* Bellow is a refactoring example where i change the type variable stored in the list from Ship to string. This made the program faster and more efficient. In this way I also simplified the code by making it shorter as previously i would take the name of the ship out by using getName() while now i just use the entry directly
+![](Refactoring.png)
+
+* Finally, here is an example of a code smell I fixed. The function shoot() was updated and renaned to attemptToSink(). This was necessary because a complication occured in a proceeding itteration where i needed to know if a ship was sunk by the current shot so i could display it as such. 
+Instead of writing a function to do this, i went and fixed the smell, making the code shorter and removing the underlying issue of losing the information about whether the shot sunk the ship it hit.
+![](CodeSmell.png)
+
+### b) Advanced progarmming principles
+
+* First, i carefully picked the data structures in which i store my data.
+  * I used a map to store the ships. I did this because the user picks which ship to place by inputting its name. By using the ship name as a key and the Ship object as the value, I decreased the time taken for a ship to be found. The reason for this is that the requerments said that an unlimited amount of ships should be possible to store. I chose map because it has log(N) complexity of search while an array has a compelxity of N.
+  * Storring Ship SharedPointers in Board. I needed a way to automatically delete the Ship pointer when its not used anywhere. I chose SharedPointers for this reason as they remove the problem of memory leaks and dangling Pointers from my code.
+
+### c) Showcase of inovations
