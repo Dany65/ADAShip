@@ -41,8 +41,8 @@ public:
 
     pair<pair<string, int>, char> splitInstructions(string instructions);
 
-    void recordShotOnShotsDisplay(pair<string, int> coordinates, char symbol);
-    void recordShotOnShipsDisplay(pair<string, int> coordinates, char symbol);
+    void recordOnShotsDisplay(pair<string, int> coordinates, char symbol);
+    void recordOnShipsDisplay(pair<string, int> coordinates, char symbol);
 
     const vector<vector<char>> &getShotsDisplay() const;
 

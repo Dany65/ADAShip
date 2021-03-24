@@ -68,7 +68,7 @@ bool isCorrectlyFormatted(string instructions) {
 
     if (instructions.find(", ") != std::string::npos) {
         string coordinates = instructions.substr(0, instructions.find(','));
-        bool coordinatesMatch = std::regex_match(coordinates, std::regex("^[A-Za-z]{1,}[1-9]{1,}$")); // true
+        bool coordinatesMatch = std::regex_match(coordinates, std::regex("^[A-Za-z]{1,}[0-9]{1,}$")); // true
 
         string secondHalf = instructions.substr(instructions.find(' ') + 1);
         bool orientationMatches = std::regex_match(secondHalf, std::regex("^[hHvV]{1}$"));
@@ -123,14 +123,14 @@ list<Point> Board::returnPointsToPopulate() {
     display(shipsDisplay);
     do {
         cout << "Which ship would you like to place: " << endl;
-        cout << "Ships you can relocate: ";
-        for (const string &shipsToPlace : placedShips) {
-            cout << shipsToPlace << " long " << ships_.find(shipsToPlace)->second->getLength() << ", ";
-        }
+//        cout << "Ships you can relocate: ";
+//        for (const string &shipsToPlace : placedShips) {
+//            cout << shipsToPlace << " long " << ships_.find(shipsToPlace)->second->getLength() << ", ";
+//        }
         cout << endl;
         cout << "You have to place: ";
         for (string placeableShipName : shipsToPlace) {
-            cout << placeableShipName << " long " << ships_.find(placeableShipName)->second->getLength() << ", ";
+            cout << placeableShipName << " (long " << ships_.find(placeableShipName)->second->getLength() << "), ";
         }
         cout << endl;
 
@@ -264,11 +264,11 @@ void Board::setShotsDisplay(const vector<vector<char>> &shotsDisplay) {
     Board::shotsDisplay = shotsDisplay;
 }
 
-void Board::recordShotOnShotsDisplay(pair<string, int> coordinates, char symbol) {
+void Board::recordOnShotsDisplay(pair<string, int> coordinates, char symbol) {
     shotsDisplay[coordinates.second - 1][numberFromExcelColumn(coordinates.first) - 1] = symbol;
 }
 
-void Board::recordShotOnShipsDisplay(pair<string, int> coordinates, char symbol) {
+void Board::recordOnShipsDisplay(pair<string, int> coordinates, char symbol) {
     shipsDisplay[coordinates.second - 1][numberFromExcelColumn(coordinates.first) - 1] = symbol;
 }
 

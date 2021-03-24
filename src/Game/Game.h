@@ -29,6 +29,12 @@ private:
     void normalShooterGame(vector<int> userConfiguration);
 
     void salvoShooterGame(vector<int> userConfiguration);
+
+    void minesGame(vector<int> vector);
+
+    list<pair<string, int>> generateMineLocations(const list<Point> &populatedPoints);
+
+    list<pair<string, int>> positionsHitByExplosion(pair<string, int> mineLocation);
 };
 
 
