@@ -135,3 +135,12 @@ Instead of writing a function to do this, i went and fixed the smell, making the
   * Storring Ship SharedPointers in Board. I needed a way to automatically delete the Ship pointer when its not used anywhere. I chose SharedPointers for this reason as they remove the problem of memory leaks and dangling Pointers from my code.
 
 ### c) Showcase of inovations
+
+
+### e) Opportunities for improvement
+* Code duplication
+  * There are functions which do very similar things and if i had more time i would have loved to extract the functionality and simplify the code further.
+* Exceptions throwing
+  * As i only pass validated input key functions, they assume the input is valid. If the code was to be developped further, it would be a good idea to include exception throwing in case someone passes unvalidated input and which breaks the code.
+* AI improved targetting
+  * If i had more time i would implement an algorithm which shoots randomly until it hits a ship. When it hits a ship it would check the squares around it to find the orientation of the ship it hit (assuming it didn't sink it) and shoot in the discovered orientation until it sinks the ship it hit.
